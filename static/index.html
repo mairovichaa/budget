@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="lib/d3.v5.js"></script>
+    <script src="lib/lodash.js"></script>
+    <script src="data.js"></script>
+    <script src="expense.js"></script>
+</head>
+<body style="padding-bottom: 20px">
+<main style="margin-top: 20px; margin-bottom: 20px;  float: left; width: 3000px" >
+
+    <style>
+        tr {
+            cursor: pointer;
+        }
+
+        tr:hover {
+            background-color: #DDD;
+        }
+
+        tr.chosen {
+            background-color: #EEE;
+        }
+
+        tr.chosen:hover {
+            background-color: #DDD;
+        }
+    </style>
+
+    <div style="width: 600px; float: left; margin-left: 20px" class="card" id="overview">
+        <div class="card-body">
+            <h5 class="card-title">Overview</h5>
+            <div id="overview-total"></div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Annual Avg.</th>
+                </tr>
+                </thead>
+                <tbody id="overview-categories-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="width: 600px; float: left; margin-left: 20px" class="card">
+        <div class="card-body">
+            <h5 class="card-title">Expenses per year</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Year</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Month Avg.</th>
+                </tr>
+                </thead>
+                <tbody id="expense-by-year-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="width: 600px; float: left; margin-left: 20px" class="card" id="year-overview">
+        <div class="card-body">
+            <h5 class="card-title">Year overview for {{year}}</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Annual Avg.</th>
+                </tr>
+                </thead>
+                <tbody id="overview-by-year-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="width: 600px; float: left; margin-left: 20px" class="card" id="expense-per-month">
+        <div class="card-body">
+            <h5 class="card-title">Total per month of {{year}}</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="expense-by-month-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="width: 400px; float: left; margin-left: 20px" class="card" id="expenses-grouped-by-category">
+        <div class="card-body">
+            <h5 class="card-title"></h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Sum</th>
+                </tr>
+                </thead>
+                <tbody id="expenses-grouped-by-category-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+<script>
+
+    let chosenYear = '2018';
+
+    function showPerCategoryForMonthAndYear(month, year) {
+        console.log(`Show per category by month = ${month}`);
+
+        d3.select('#expenses-grouped-by-category h5')
+            .text(() => `Total per category for ${E.getMonthName(month)} of ${year}`);
+
+        let monthCategoriesByCategoryList = d3.select('#expenses-grouped-by-category-table-body');
+        monthCategoriesByCategoryList.selectAll('*').remove();
+        monthCategoriesByCategoryList
+            .selectAll('tr')
+            .data(d3.entries(E.totalPerCategoryForMonthAndYear(month, year)))
+            .enter()
+            .append('tr')
+            .selectAll('td')
+            .data(categoryAndTotal => [categoryAndTotal.key, categoryAndTotal.value])
+            .enter()
+            .append('td')
+            .text(d => d);
+    }
+
+    function showOverviewForYear(year) {
+        d3.select('#year-overview h5')
+            .text(() => `Year overview for ${year}`);
+
+
+        let expenseByMonthList = d3.select('overview-by-year-table-body');
+        expenseByMonthList.selectAll('*').remove();
+        expenseByMonthList
+            .selectAll('tr')
+            .data(E.months)
+            .enter()
+            .append('tr')
+            .selectAll('td')
+            .data((month, key) => [key + 1, E.getMonthName(month) , E.getTotalByMonthAndYear(month, chosenYear)])
+            .enter()
+            .append('td')
+            .text(d => d);
+    }
+
+    function showForYear(chosenYear) {
+        let chosenMonth = E.months[0];
+
+        d3.select('#expense-per-month h5')
+            .text(() => `Total per month of ${chosenYear}`);
+
+        let expenseByMonthList = d3.select('#expense-by-month-table-body');
+        expenseByMonthList.selectAll('*').remove();
+        expenseByMonthList
+            .selectAll('tr')
+            .data(E.months)
+            .enter()
+            .append('tr')
+            .classed('chosen', month => month === chosenMonth)
+            .on('click', function () {
+                d3.select(this.parentNode)
+                    .select('.chosen').classed('chosen', false);
+
+                const tr = d3.select(this);
+                tr.classed('chosen', true);
+
+                chosenMonth = tr.data()[0];
+                showPerCategoryForMonthAndYear(chosenMonth, chosenYear);
+            })
+            .selectAll('td')
+            .data((month, key) => [key + 1, E.getMonthName(month) , E.getTotalByMonthAndYear(month, chosenYear)])
+            .enter()
+            .append('td')
+            .text(d => d);
+
+        showOverviewForYear(chosenYear);
+        showPerCategoryForMonthAndYear(chosenMonth, chosenYear);
+    }
+
+    let expenseByYearList = d3.select('#expense-by-year-table-body');
+
+    expenseByYearList
+        .selectAll('tr')
+        .data(E.getYears())
+        .enter()
+        .append('tr')
+        .classed('chosen', year => year === chosenYear)
+        .on('click', function () {
+            d3.select('tr.chosen').classed('chosen', false);
+
+            const tr = d3.select(this);
+            tr.classed('chosen', true);
+
+            chosenYear = tr.data()[0];
+            showForYear(chosenYear);
+        })
+        .selectAll('td')
+        .data(year => [year, E.getTotalByYear(year), E.getAverageByMonthForYear(year)])
+        .enter()
+        .append('td')
+        .text(d => d);
+
+    d3.select('#overview-total')
+        .append('p')
+        .text(`Total : ${E.getTotal()}`);
+
+    d3.select('#overview-total')
+        .append('p')
+        .text(`Annual average : ${E.getAnnualAverage()}`);
+
+    d3.select('#overview-categories-table-body')
+        .selectAll('tr')
+        .data(E.getCategories())
+        .enter()
+        .append('tr')
+        .selectAll('td')
+        .data(category => [category, E.getTotalForCategory(category), E.getAnnualAverageForCategory(category)])
+        .enter()
+        .append('td')
+        .text(d => d);
+
+    showForYear(chosenYear);
+</script>
+</html>
