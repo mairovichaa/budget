@@ -9,6 +9,8 @@ import '../../static/data';
 })
 export class ExpenseService {
     static AMOUNT_OF_YEARS = 2;
+
+    years = new Set();
     expenses = [];
 
     constructor() {
@@ -16,8 +18,12 @@ export class ExpenseService {
             e.category = e.category.trim();
             const [date, month, year] = e.date.split(".");
             e.date = new Date(year, month - 1, date);
+
+            this.years.add(year);
         });
         this.expenses = expenses;
+
+        ExpenseService.AMOUNT_OF_YEARS = this.years.size;
     }
 
     getOverview() {
