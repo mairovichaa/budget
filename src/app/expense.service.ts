@@ -31,4 +31,14 @@ export class ExpenseService {
             .value();
     }
 
+    getPerYear() {
+        return _(expenses)
+            .groupBy(e => e.date.getFullYear())
+            .map((expenses, year) => {
+                const total = _(expenses).sumBy(e => e.sum);
+                const monthlyAverage = total / 12;
+                return {year, total, monthlyAverage};
+            })
+            .value();
+    }
 }
