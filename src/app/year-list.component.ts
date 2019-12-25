@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ExpenseService} from './expense.service';
 
 @Component({
@@ -16,7 +16,7 @@ import {ExpenseService} from './expense.service';
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let entry of data">
+                    <tr *ngFor="let entry of data" [class.chosen]="entry.year === year" (click)="chooseYear(entry)" >
                         <td>{{entry.year}}</td>
                         <td>{{entry.total | number:'0.2-2'}}</td>
                         <td>{{entry.monthlyAverage | number:'0.2-2'}}</td>
@@ -26,13 +26,27 @@ import {ExpenseService} from './expense.service';
             </div>
         </div>
     `,
-    styles: []
+    styles: [
+        'tr {cursor: pointer;}',
+        'tr:hover {background-color: #DDD;}',
+        'tr.chosen {background-color: #EEE;}',
+        'tr.chosen:hover {background-color: #DDD;}'
+    ]
 })
-export class YearListComponent {
+export class YearListComponent implements OnInit {
     data = [];
+    year: number;
 
     constructor(private expenseService: ExpenseService) {
         this.data = expenseService.getPerYear();
     }
 
+    ngOnInit() {
+        this.expenseService.currentYear.subscribe(year => this.year = year);
+    }
+
+    chooseYear(yearInfo) {
+        const chosenYear = yearInfo.year;
+        this.expenseService.changeYear(chosenYear);
+    }
 }

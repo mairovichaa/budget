@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from "rxjs";
 import * as _ from "lodash";
 
 declare var expenses: any;
@@ -10,8 +11,11 @@ import '../../static/data';
 export class ExpenseService {
     static AMOUNT_OF_YEARS = 2;
 
-    years = new Set();
+    years: Set<number> = new Set();
     expenses = [];
+
+    private yearSource;
+    currentYear: Observable<number>;
 
     constructor() {
         expenses.forEach(e => {
@@ -24,6 +28,13 @@ export class ExpenseService {
         this.expenses = expenses;
 
         ExpenseService.AMOUNT_OF_YEARS = this.years.size;
+        let lastYear = Math.max(...Array.from(this.years));
+        this.yearSource = new BehaviorSubject(lastYear);
+        this.currentYear = this.yearSource.asObservable();
+    }
+
+    changeYear(year: number) {
+        this.yearSource.next(year);
     }
 
     getOverview() {
