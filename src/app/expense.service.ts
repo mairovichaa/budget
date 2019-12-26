@@ -65,8 +65,21 @@ export class ExpenseService {
             .groupBy(e => e.date.getMonth())
             .map((expenses, monthNumber) => {
                 const total = _(expenses).sumBy(e => e.sum);
-                const month = new Date(null, monthNumber).toLocaleString('en', { month: 'long' });
+                const month = new Date(null, parseInt(monthNumber)).toLocaleString('en', { month: 'long' });
                 return {month, total};
+            })
+            .value();
+    }
+
+    getPerCategory(year: number) {
+        const AMOUNT_OF_MONTHS = 12;
+        return _(expenses)
+            .filter(e => e.date.getFullYear() === year)
+            .groupBy(e => e.category)
+            .map((expenses, category) => {
+                const total = _(expenses).sumBy(e => e.sum);
+                const monthly = total / AMOUNT_OF_MONTHS;
+                return {category, total, monthly};
             })
             .value();
     }

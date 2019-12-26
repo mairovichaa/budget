@@ -45,6 +45,28 @@ import {ExpenseService} from './expense.service';
                     </table>
                 </div>
             </div>
+
+            <div style="width: 600px; margin-top: 20px" class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Per category</h5>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Category</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Month Avg.</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let entry of dataPerCategory">
+                            <td>{{entry.category}}</td>
+                            <td>{{entry.total | number:'0.2-2'}}</td>
+                            <td>{{entry.monthly | number:'0.2-2'}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     `,
     styles: [
@@ -57,6 +79,7 @@ import {ExpenseService} from './expense.service';
 export class YearListComponent implements OnInit {
     data = [];
     dataPerMonth = [];
+    dataPerCategory = [];
     year: number;
 
     constructor(private expenseService: ExpenseService) {
@@ -67,6 +90,7 @@ export class YearListComponent implements OnInit {
         this.expenseService.currentYear.subscribe(year => {
             this.year = year;
             this.dataPerMonth = this.expenseService.getPerMonth(year);
+            this.dataPerCategory = this.expenseService.getPerCategory(year);
         });
     }
 
