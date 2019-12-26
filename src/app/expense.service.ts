@@ -54,7 +54,7 @@ export class ExpenseService {
             .map((expenses, year) => {
                 const total = _(expenses).sumBy(e => e.sum);
                 const monthlyAverage = total / 12;
-                return {year, total, monthlyAverage};
+                return {year: parseInt(year), total, monthlyAverage};
             })
             .value();
     }

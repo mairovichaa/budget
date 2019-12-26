@@ -66,7 +66,7 @@ export class YearListComponent implements OnInit {
     ngOnInit() {
         this.expenseService.currentYear.subscribe(year => {
             this.year = year;
-            this.dataPerMonth = this.expenseService.getPerMonth(parseInt(year));
+            this.dataPerMonth = this.expenseService.getPerMonth(year);
         });
     }
 
