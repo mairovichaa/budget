@@ -58,4 +58,16 @@ export class ExpenseService {
             })
             .value();
     }
+
+    getPerMonth(year: number) {
+        return _(expenses)
+            .filter(e => e.date.getFullYear() === year)
+            .groupBy(e => e.date.getMonth())
+            .map((expenses, monthNumber) => {
+                const total = _(expenses).sumBy(e => e.sum);
+                const month = new Date(null, monthNumber).toLocaleString('en', { month: 'long' });
+                return {month, total};
+            })
+            .value();
+    }
 }
