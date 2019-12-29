@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CategoryOverviewComponent } from './category-overview.component';
 import { YearListComponent } from './year-list.component';
+import { MonthOverviewComponent } from './month-overview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoryOverviewComponent,
-    YearListComponent
+    YearListComponent,
+    MonthOverviewComponent
   ],
   imports: [
     BrowserModule,

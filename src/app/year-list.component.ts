@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {ExpenseService} from './expense.service';
 
 @Component({
@@ -37,7 +37,9 @@ import {ExpenseService} from './expense.service';
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let entry of dataPerMonth">
+                        <tr *ngFor="let entry of dataPerMonth"
+                            [class.chosen]="entry.monthNumber === month" 
+                            (click)="chooseMonth(entry)">
                             <td>{{entry.month}}</td>
                             <td>{{entry.total | number:'0.2-2'}}</td>
                         </tr>
@@ -81,21 +83,33 @@ export class YearListComponent implements OnInit {
     dataPerMonth = [];
     dataPerCategory = [];
     year: number;
+    month: number = 1;
+    @Output() yearChosenEvent = new EventEmitter<number>();
+    @Output() monthChosenEvent = new EventEmitter<number>();
 
     constructor(private expenseService: ExpenseService) {
         this.data = expenseService.getPerYear();
     }
 
     ngOnInit() {
+        //TODO get rid of it and use Input/Output instead
         this.expenseService.currentYear.subscribe(year => {
             this.year = year;
             this.dataPerMonth = this.expenseService.getPerMonth(year);
             this.dataPerCategory = this.expenseService.getPerCategory(year);
+            this.yearChosenEvent.emit(year);
         });
     }
 
     chooseYear(yearInfo) {
         const chosenYear = yearInfo.year;
         this.expenseService.changeYear(chosenYear);
+        this.yearChosenEvent.emit(chosenYear);
+    }
+
+    chooseMonth(entry: any) {
+        const chosenMonth = entry.monthNumber;
+        this.month = chosenMonth;
+        this.monthChosenEvent.emit(chosenMonth);
     }
 }

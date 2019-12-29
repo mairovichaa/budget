@@ -4,6 +4,7 @@ import * as _ from "lodash";
 
 declare var expenses: any;
 import '../../static/data';
+import {DateService} from "./date.service";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class ExpenseService {
     private yearSource;
     currentYear: Observable<number>;
 
-    constructor() {
+    constructor(private dateService: DateService) {
         expenses.forEach(e => {
             e.category = e.category.trim();
             const [date, month, year] = e.date.split(".");
@@ -66,7 +67,7 @@ export class ExpenseService {
             .map((expenses, monthNumber) => {
                 const total = _(expenses).sumBy(e => e.sum);
                 const month = new Date(null, parseInt(monthNumber)).toLocaleString('en', { month: 'long' });
-                return {month, total};
+                return {month, total, monthNumber: parseInt(monthNumber)};
             })
             .value();
     }
@@ -80,6 +81,21 @@ export class ExpenseService {
                 const total = _(expenses).sumBy(e => e.sum);
                 const monthly = total / AMOUNT_OF_MONTHS;
                 return {category, total, monthly};
+            })
+            .value();
+    }
+
+    getOverviewForYearAndMonth(year: number, month: number) {
+        const amountOfDays = this.dateService.getAmountOfDays(year, month);
+        return _(expenses)
+            .filter(e =>
+                e.date.getFullYear() === year && e.date.getMonth() === month
+            )
+            .groupBy(e => e.category)
+            .map((expenses, category) => {
+                const total = _(expenses).sumBy(e => e.sum);
+                const daily = total / amountOfDays;
+                return {category, total, daily};
             })
             .value();
     }
