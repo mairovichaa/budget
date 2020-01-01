@@ -1,5 +1,6 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ViewChildren, QueryList} from '@angular/core';
 import {ExpenseService} from './expense.service';
+import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
 
 @Component({
     selector: 'year-list',
@@ -54,9 +55,9 @@ import {ExpenseService} from './expense.service';
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">Category</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Month Avg.</th>
+                            <th scope="col" sortable="category" (sort)="onSort($event)">Category</th>
+                            <th scope="col" sortable="total" (sort)="onSort($event)">Total</th>
+                            <th scope="col" sortable="monthly" (sort)="onSort($event)">Month Avg.</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -86,6 +87,7 @@ export class YearListComponent implements OnInit {
     month: number = 1;
     @Output() yearChosenEvent = new EventEmitter<number>();
     @Output() monthChosenEvent = new EventEmitter<number>();
+    @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
     constructor(private expenseService: ExpenseService) {
         this.data = expenseService.getPerYear();
@@ -111,5 +113,11 @@ export class YearListComponent implements OnInit {
         const chosenMonth = entry.monthNumber;
         this.month = chosenMonth;
         this.monthChosenEvent.emit(chosenMonth);
+    }
+
+    onSort(event: SortEvent) {
+        this.headers.forEach(header => {
+            header.process(event.column, this.dataPerCategory);
+        });
     }
 }

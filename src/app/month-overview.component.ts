@@ -1,7 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {ExpenseService} from "./expense.service";
 import * as _ from "lodash";
 import {DateService} from "./date.service";
+import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
 
 @Component({
     selector: 'month-overview',
@@ -17,9 +18,9 @@ import {DateService} from "./date.service";
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Category</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Daily</th>
+                        <th scope="col" sortable="category" (sort)="onSort($event)">Category</th>
+                        <th scope="col" sortable="total" (sort)="onSort($event)">Total</th>
+                        <th scope="col" sortable="daily" (sort)="onSort($event)">Daily</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -36,14 +37,16 @@ import {DateService} from "./date.service";
     styles: []
 })
 export class MonthOverviewComponent implements OnInit, OnChanges {
-    @Input() year: number;
-    @Input() month: number;
+    @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
-    monthName: string;
+    @Input() year: number;
+
+    @Input() month: number;
 
     data = [];
     total = 0;
     daily = 0;
+    monthName: string;
     amountOfDays: number;
 
     constructor(private expenseService: ExpenseService,
@@ -59,5 +62,11 @@ export class MonthOverviewComponent implements OnInit, OnChanges {
         this.data = this.expenseService.getOverviewForYearAndMonth(this.year, this.month);
         this.total = _(this.data).sumBy(e => e.total);
         this.daily = this.total / this.amountOfDays;
+    }
+
+    onSort(event: SortEvent) {
+        this.headers.forEach(header => {
+            header.process(event.column, this.data);
+        });
     }
 }

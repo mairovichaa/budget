@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 import {ExpenseService} from './expense.service';
 import * as _ from "lodash";
+import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
 
 @Component({
     selector: 'category-overview',
@@ -15,9 +16,9 @@ import * as _ from "lodash";
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Category</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Annual Avg.</th>
+                        <th scope="col" sortable="category" (sort)="onSort($event)">Category</th>
+                        <th scope="col" sortable="total" (sort)="onSort($event)">Total</th>
+                        <th scope="col" sortable="annual" (sort)="onSort($event)">Annual Avg.</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,10 +39,17 @@ export class CategoryOverviewComponent {
     total = 0;
     annual = 0;
 
+    @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
+
     constructor(private expenseService: ExpenseService) {
         this.data = expenseService.getOverview();
         this.total = _(this.data).sumBy(e => e.total);
         this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
     }
 
+    onSort(event: SortEvent) {
+        this.headers.forEach(header => {
+            header.process(event.column, this.data);
+        });
+    }
 }

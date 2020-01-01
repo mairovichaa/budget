@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { CategoryOverviewComponent } from './category-overview.component';
 import { YearListComponent } from './year-list.component';
 import { MonthOverviewComponent } from './month-overview.component';
+import { SortableHeaderDirective } from './sortable-header.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoryOverviewComponent,
     YearListComponent,
-    MonthOverviewComponent
+    MonthOverviewComponent,
+    SortableHeaderDirective
   ],
   imports: [
     BrowserModule,
