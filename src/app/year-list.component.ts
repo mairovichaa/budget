@@ -6,7 +6,7 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
     selector: 'year-list',
     template: `
         <div>
-            <div style="width: 600px" class="card">
+            <div style="width: 400px" class="card">
                 <div class="card-body">
                     <h5 class="card-title">Expenses per year</h5>
                     <table class="table">
@@ -27,7 +27,7 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
                     </table>
                 </div>
             </div>
-            <div style="width: 600px; margin-top: 20px" class="card">
+            <div style="width: 400px; margin-top: 20px" class="card">
                 <div class="card-body">
                     <h5 class="card-title">Per month</h5>
                     <table class="table">
@@ -49,7 +49,7 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
                 </div>
             </div>
 
-            <div style="width: 600px; margin-top: 20px" class="card">
+            <div style="width: 400px; margin-top: 20px" class="card">
                 <div class="card-body">
                     <h5 class="card-title">Per category</h5>
                     <table class="table">
