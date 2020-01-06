@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter, ViewChildren, QueryList} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {ExpenseService} from './expense.service';
 import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
 
@@ -18,7 +18,7 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
                         </thead>
                         <tbody>
                         <tr *ngFor="let entry of dataPerMonth"
-                            [class.chosen]="entry.monthNumber === month" 
+                            [class.chosen]="entry.monthNumber === month"
                             (click)="chooseMonth(entry)">
                             <td>{{entry.month}}</td>
                             <td>{{entry.total | number:'0.2-2'}}</td>
@@ -58,26 +58,21 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
         'tr.chosen:hover {background-color: #DDD;}'
     ]
 })
-export class MonthListComponent implements OnInit {
-    data = [];
+export class MonthListComponent implements OnChanges {
     dataPerMonth = [];
     dataPerCategory = [];
-    year: number;
     month: number = 1;
+
+    @Input() year: number;
     @Output() monthChosenEvent = new EventEmitter<number>();
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
     constructor(private expenseService: ExpenseService) {
-        this.data = expenseService.getPerYear();
     }
 
-    ngOnInit() {
-        //TODO get rid of it and use Input/Output instead
-        this.expenseService.currentYear.subscribe(year => {
-            this.year = year;
-            this.dataPerMonth = this.expenseService.getPerMonth(year);
-            this.dataPerCategory = this.expenseService.getPerCategory(year);
-        });
+    ngOnChanges(changes: SimpleChanges): void {
+        this.dataPerMonth = this.expenseService.getPerMonth(this.year);
+        this.dataPerCategory = this.expenseService.getPerCategory(this.year);
     }
 
     chooseMonth(entry: any) {

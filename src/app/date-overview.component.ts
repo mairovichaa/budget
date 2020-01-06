@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
     selector: 'date-overview',
     template: `
         <year-list (yearChosenEvent)="chooseYear($event)"></year-list>
-        <month-list (monthChosenEvent)="chooseMonth($event)"></month-list>
+        <month-list [year]="currentYear" (monthChosenEvent)="chooseMonth($event)"></month-list>
         <month-overview [year]="currentYear" [month]="currentMonth"></month-overview>
     `,
     styles: [
@@ -13,7 +13,7 @@ import {Component} from '@angular/core';
         'month-overview {float: left; margin-left: 20px}',
     ]
 })
-export class DateOverviewComponent {
+export class DateOverviewComponent{
     currentMonth: number = 0;
     currentYear: number;
 

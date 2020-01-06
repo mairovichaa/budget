@@ -43,20 +43,17 @@ export class YearListComponent implements OnInit {
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
     constructor(private expenseService: ExpenseService) {
-        this.data = expenseService.getPerYear();
     }
 
     ngOnInit() {
-        //TODO get rid of it and use Input/Output instead
-        this.expenseService.currentYear.subscribe(year => {
-            this.year = year;
-            this.yearChosenEvent.emit(year);
-        });
+        this.data = this.expenseService.getPerYear();
+        const currentYear = this.expenseService.currentYear;
+        this.chooseYear({year: currentYear});
     }
 
     chooseYear(yearInfo) {
         const chosenYear = yearInfo.year;
-        this.expenseService.changeYear(chosenYear);
+        this.year = chosenYear;
         this.yearChosenEvent.emit(chosenYear);
     }
 }
