@@ -7,7 +7,7 @@ import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
 @Component({
     selector: 'month-overview',
     template: `
-        <div style="width: 600px;" class="card">
+        <div style="width: 400px;" class="card">
             <div class="card-body">
                 <h5 class="card-title">Overview for {{monthName}} of {{year}}</h5>
                 <div>
