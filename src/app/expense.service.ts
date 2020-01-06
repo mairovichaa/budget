@@ -46,6 +46,7 @@ export class ExpenseService {
                 const annual = total / ExpenseService.AMOUNT_OF_YEARS;
                 return {category, total, annual};
             })
+            .sortBy(['category'])
             .value();
     }
 
@@ -82,6 +83,7 @@ export class ExpenseService {
                 const monthly = total / AMOUNT_OF_MONTHS;
                 return {category, total, monthly};
             })
+            .sortBy(['category'])
             .value();
     }
 
@@ -97,6 +99,7 @@ export class ExpenseService {
                 const daily = total / amountOfDays;
                 return {category, total, daily};
             })
+            .sortBy(['category'])
             .value();
     }
 }
