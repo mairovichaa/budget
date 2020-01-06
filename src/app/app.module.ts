@@ -8,12 +8,14 @@ import {YearListComponent} from './year-list.component';
 import {MonthOverviewComponent} from './month-overview.component';
 import {SortableHeaderDirective} from './sortable-header.directive';
 import {DateOverviewComponent} from "./date-overview.component";
+import {MonthListComponent} from "./month-list.component";
 
 @NgModule({
     declarations: [
         AppComponent,
         CategoryOverviewComponent,
         YearListComponent,
+        MonthListComponent,
         MonthOverviewComponent,
         SortableHeaderDirective,
         DateOverviewComponent
