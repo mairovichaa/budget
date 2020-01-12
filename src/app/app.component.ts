@@ -13,6 +13,9 @@ import {Component} from '@angular/core';
                     <li class="nav-item" routerLinkActive="active">
                         <a class="nav-link" routerLink="/category">Category</a>
                     </li>
+                    <li class="nav-item" routerLinkActive="active">
+                        <a class="nav-link" routerLink="/mortgage">Mortgage</a>
+                    </li>
                 </ul>
             </div>
         </nav>
