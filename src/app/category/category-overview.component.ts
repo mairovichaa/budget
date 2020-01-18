@@ -1,7 +1,7 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
-import {ExpenseService} from './expense.service';
+import {ExpenseService} from '../expense.service';
 import * as _ from "lodash";
-import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
+import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
 
 @Component({
     selector: 'category-overview',

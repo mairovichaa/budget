@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {CategoryOverviewComponent} from './category-overview.component';
+import {CategoryOverviewComponent} from './category/category-overview.component';
 import {YearListComponent} from './year-list.component';
 import {MonthOverviewComponent} from './month-overview.component';
 import {SortableHeaderDirective} from './sortable-header.directive';

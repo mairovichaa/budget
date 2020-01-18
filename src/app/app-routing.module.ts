@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CategoryOverviewComponent} from "./category-overview.component";
+import {CategoryOverviewComponent} from "./category/category-overview.component";
 import {DateOverviewComponent} from "./date-overview.component";
 import {MortgageComponent} from "./mortgage/mortgage.component";
 
