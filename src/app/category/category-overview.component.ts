@@ -22,7 +22,8 @@ import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let entry of data">
+                    <tr *ngFor="let entry of data" [class.chosen]="entry.category === chosenCategory"
+                        (click)="chooseCategory(entry)">
                         <td>{{entry.category}}</td>
                         <td>{{entry.total | number:'0.2-2'}}</td>
                         <td>{{entry.annual | number:'0.2-2'}}</td>
@@ -31,13 +32,20 @@ import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
                 </table>
             </div>
         </div>
+        <per-year [category]="chosenCategory"></per-year>
     `,
-    styles: []
+    styles: [
+        'tr {cursor: pointer;}',
+        'tr:hover {background-color: #DDD;}',
+        'tr.chosen {background-color: #EEE;}',
+        'tr.chosen:hover {background-color: #DDD;}'
+    ]
 })
 export class CategoryOverviewComponent {
     data = [];
     total = 0;
     annual = 0;
+    chosenCategory: string;
 
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
@@ -45,11 +53,19 @@ export class CategoryOverviewComponent {
         this.data = expenseService.getOverview();
         this.total = _(this.data).sumBy(e => e.total);
         this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
+
+        if (this.data.length > 0) {
+            this.chosenCategory = this.data[0].category;
+        }
     }
 
     onSort(event: SortEvent) {
         this.headers.forEach(header => {
             header.process(event.column, this.data);
         });
+    }
+
+    chooseCategory(entry: any) {
+        this.chosenCategory = entry.category;
     }
 }

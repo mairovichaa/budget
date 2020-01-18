@@ -11,6 +11,7 @@ import {SortableHeaderDirective} from './sortable-header.directive';
 import {DateOverviewComponent} from "./date-overview.component";
 import {MonthListComponent} from "./month-list.component";
 import {MortgageComponent} from "./mortgage/mortgage.component";
+import {PerYearComponent} from "./category/per-year.component";
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import {MortgageComponent} from "./mortgage/mortgage.component";
         MonthOverviewComponent,
         SortableHeaderDirective,
         DateOverviewComponent,
-        MortgageComponent
+        MortgageComponent,
+        PerYearComponent
     ],
     imports: [
         BrowserModule,

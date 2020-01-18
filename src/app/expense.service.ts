@@ -12,7 +12,7 @@ export class ExpenseService {
     static AMOUNT_OF_YEARS = 2;
 
     years: Set<number> = new Set();
-    expenses = [];
+    readonly expenses = [];
 
     readonly currentYear: number;
 
