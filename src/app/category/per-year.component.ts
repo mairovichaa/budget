@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
 
@@ -13,7 +13,7 @@ class Year {
     selector: 'per-year',
     template: `
 
-        <div style="width: 600px; margin-left: 20px; float: left" class="card">
+        <div style="width: 400px; margin-left: 20px; float: left" class="card">
             <div class="card-body">
                 <h5 class="card-title">Expenses per year for {{category}}</h5>
                 <table class="table">
@@ -25,7 +25,9 @@ class Year {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let entry of data">
+                    <tr *ngFor="let entry of data" 
+                        [class.chosen]="entry.year === chosenYear"
+                        (click)="chooseYear(entry)">
                         <td>{{entry.year}}</td>
                         <td>{{entry.total | number:'0.2-2'}}</td>
                         <td>{{entry.monthly | number:'0.2-2'}}</td>
@@ -35,13 +37,20 @@ class Year {
             </div>
         </div>
     `,
-    styles: []
+    styles: [
+        'tr {cursor: pointer;}',
+        'tr:hover {background-color: #DDD;}',
+        'tr.chosen {background-color: #EEE;}',
+        'tr.chosen:hover {background-color: #DDD;}'
+    ]
 })
 export class PerYearComponent implements OnChanges {
 
     private data: Year[] = [];
+    private chosenYear: number;
 
     @Input() category: string;
+    @Output() yearChosenEvent = new EventEmitter<number>();
 
     constructor(private expenseService: ExpenseService) {
     }
@@ -56,6 +65,16 @@ export class PerYearComponent implements OnChanges {
                 return {year: parseInt(year), total, monthly};
             })
             .value();
+
+        if (this.data.length > 0){
+            this.chooseYear(this.data[0]);
+        }
+    }
+
+    chooseYear(entry: any) {
+        console.log('chooseYear ' + JSON.stringify(entry));
+        this.chosenYear = entry.year;
+        this.yearChosenEvent.emit(this.chosenYear);
     }
 
 }

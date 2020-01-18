@@ -12,6 +12,7 @@ import {DateOverviewComponent} from "./date-overview.component";
 import {MonthListComponent} from "./month-list.component";
 import {MortgageComponent} from "./mortgage/mortgage.component";
 import {PerYearComponent} from "./category/per-year.component";
+import {PerMonthComponent} from "./category/per-month.component";
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import {PerYearComponent} from "./category/per-year.component";
         SortableHeaderDirective,
         DateOverviewComponent,
         MortgageComponent,
-        PerYearComponent
+        PerYearComponent,
+        PerMonthComponent
     ],
     imports: [
         BrowserModule,

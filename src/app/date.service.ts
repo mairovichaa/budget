@@ -8,6 +8,10 @@ export class DateService {
     constructor() {
     }
 
+    getMonthNames(): string[] {
+        return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(this.getMonthName);
+    }
+
     // month 0-based
     getMonthName(month: number): string {
         return new Date(0, month).toLocaleString('en', {month: 'long'});

@@ -32,7 +32,8 @@ import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
                 </table>
             </div>
         </div>
-        <per-year [category]="chosenCategory"></per-year>
+        <per-year [category]="chosenCategory" (yearChosenEvent)="chooseYear($event)"></per-year>
+        <per-month [category]="chosenCategory" [year]="chosenYear"></per-month>
     `,
     styles: [
         'tr {cursor: pointer;}',
@@ -46,6 +47,7 @@ export class CategoryOverviewComponent {
     total = 0;
     annual = 0;
     chosenCategory: string;
+    chosenYear: number;
 
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
@@ -67,5 +69,10 @@ export class CategoryOverviewComponent {
 
     chooseCategory(entry: any) {
         this.chosenCategory = entry.category;
+    }
+
+    chooseYear(year: number) {
+        console.log('chooseYear ' + year);
+        this.chosenYear = year;
     }
 }
