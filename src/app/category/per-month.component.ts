@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
 import {DateService} from "../date.service";
@@ -26,7 +26,9 @@ class Month {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let entry of data">
+                    <tr *ngFor="let entry of data"
+                        [class.chosen]="entry.name === chosenMonthName"
+                        (click)="chooseMonth(entry.name)">
                         <td>{{entry.name}}</td>
                         <td>{{entry.total | number:'0.2-2'}}</td>
                         <td>{{entry.daily | number:'0.2-2'}}</td>
@@ -36,14 +38,21 @@ class Month {
             </div>
         </div>
     `,
-    styles: []
+    styles: [
+        'tr {cursor: pointer;}',
+        'tr:hover {background-color: #DDD;}',
+        'tr.chosen {background-color: #EEE;}',
+        'tr.chosen:hover {background-color: #DDD;}'
+    ]
 })
 export class PerMonthComponent implements OnChanges {
 
-    private data: Month[] = [];
+    data: Month[] = [];
+    chosenMonthName: string;
 
     @Input() category: string;
     @Input() year: number = 2018;
+    @Output() monthChosenEvent = new EventEmitter<number>();
 
     constructor(private expenseService: ExpenseService, private dateService: DateService) {
     }
@@ -74,6 +83,12 @@ export class PerMonthComponent implements OnChanges {
             }
         }
 
+        this.chooseMonth(monthNames[0])
     }
 
+    chooseMonth(month: string) {
+        this.chosenMonthName = month;
+        const monthIndex = this.dateService.getMonthIndex(month);
+        this.monthChosenEvent.emit(monthIndex);
+    }
 }
