@@ -46,8 +46,8 @@ class Year {
 })
 export class PerYearComponent implements OnChanges {
 
-    private data: Year[] = [];
-    private chosenYear: number;
+    data: Year[] = [];
+    chosenYear: number;
 
     @Input() category: string;
     @Output() yearChosenEvent = new EventEmitter<number>();
