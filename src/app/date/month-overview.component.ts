@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
-import {ExpenseService} from "./expense.service";
+import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
-import {DateService} from "./date.service";
-import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
+import {DateService} from "../date.service";
+import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
 
 @Component({
     selector: 'month-overview',

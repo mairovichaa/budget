@@ -1,6 +1,6 @@
 import {Component, OnInit, Output, EventEmitter, ViewChildren, QueryList} from '@angular/core';
-import {ExpenseService} from './expense.service';
-import {SortableHeaderDirective} from "./sortable-header.directive";
+import {ExpenseService} from '../expense.service';
+import {SortableHeaderDirective} from "../sortable-header.directive";
 
 @Component({
     selector: 'year-list',

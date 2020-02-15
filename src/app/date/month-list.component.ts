@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
-import {ExpenseService} from './expense.service';
-import {SortableHeaderDirective, SortEvent} from "./sortable-header.directive";
+import {ExpenseService} from '../expense.service';
+import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
 
 @Component({
     selector: 'month-list',
