@@ -25,17 +25,33 @@ function getFormattedDate(expense) {
 
 const outExpense = [];
 
-
 expenses.forEach(e => {
     const outE = {
         date: getFormattedDate(e),
         sum: e['сумма'],
-        category: e['категория']
+        category: e['категория'],
+        comment: e['комментарий']
     };
     outExpense.push(outE);
 });
 
-const data = `\nlet expenses = ${JSON.stringify(outExpense)};`;
+const outIncome = [];
+
+const incomeWorksheet = workbook.Sheets['Доходы'];
+const incomeList = XLSX.utils.sheet_to_json(incomeWorksheet);
+
+incomeList.forEach(e => {
+    const outI = {
+        date: getFormattedDate(e),
+        sum: e['сумма'],
+        category: e['категория'],
+        comment: e['комментарий']
+    };
+    outIncome.push(outI);
+});
+
+const data = `\nlet expenses = ${JSON.stringify(outExpense)};\n
+let income = ${JSON.stringify(outIncome)};`;
 
 fs.writeFileSync(config.PATH_TO_DATA_FILE, data);
 
