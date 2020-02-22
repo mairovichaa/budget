@@ -8,6 +8,7 @@ import {SortableHeaderDirective} from './sortable-header.directive';
 import {MortgageComponent} from "./mortgage/mortgage.component";
 import {CategoryModule} from "./category/category.module";
 import {DateModule} from "./date/date.module";
+import {IncomeModule} from "./income/income.module";
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import {DateModule} from "./date/date.module";
         FormsModule,
 
         CategoryModule,
-        DateModule
+        DateModule,
+        IncomeModule
     ],
     providers: [],
     bootstrap: [AppComponent]
