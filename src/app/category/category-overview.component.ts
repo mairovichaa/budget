@@ -54,13 +54,15 @@ export class CategoryOverviewComponent {
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
     constructor(private expenseService: ExpenseService) {
-        this.data = expenseService.getOverview();
-        this.total = _(this.data).sumBy(e => e.total);
-        this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
+        this.expenseService.requestObservable.subscribe(data => {
+            this.data = expenseService.getOverview();
+            this.total = _(this.data).sumBy(e => e.total);
+            this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
 
-        if (this.data.length > 0) {
-            this.chosenCategory = this.data[0].category;
-        }
+            if (this.data.length > 0) {
+                this.chosenCategory = this.data[0].category;
+            }
+        });
     }
 
     onSort(event: SortEvent) {
