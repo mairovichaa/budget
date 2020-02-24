@@ -26,7 +26,6 @@
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
             "scripts": [
-              "static/data.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js"
             ],
             "es5BrowserSupport": true

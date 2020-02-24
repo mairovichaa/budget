@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import * as _ from "lodash";
-import '../../static/data';
 import {DateService} from "./date.service";
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
