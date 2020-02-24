@@ -1,6 +1,9 @@
 {
   "name": "budget-node",
   "private": true,
+  "scripts": {
+    "back-server": "node server/app.js"
+  },
   "dependencies": {
     "@angular/animations": "~7.2.0",
     "@angular/common": "~7.2.0",
@@ -10,11 +13,13 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^5.1.4",
     "core-js": "^2.5.4",
+    "express": "4.17.1",
     "lodash": "^4.17.15",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
-    "xlsx": "^0.15.3",
+    "xlsx": "^0.15.4",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
