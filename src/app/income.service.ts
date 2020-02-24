@@ -2,9 +2,15 @@ import {Injectable} from '@angular/core';
 import * as _ from "lodash";
 import '../../static/data';
 import {DateService} from "./date.service";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
-declare var income: any;
-
+interface Income {
+    category: string;
+    date: Date;
+    sum: number;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -13,22 +19,38 @@ export class IncomeService {
     static AMOUNT_OF_YEARS = 2;
 
     years: Set<number> = new Set();
-    readonly income = [];
 
-    readonly currentYear: number;
+    requestObservable: Observable<any>;
 
-    constructor(private dateService: DateService) {
-        income.forEach(e => {
-            e.category = e.category.trim();
-            const [date, month, year] = e.date.split(".");
-            e.date = new Date(year, month - 1, date);
+    income: Income[] = [];
 
-            this.years.add(year);
-        });
-        this.income = income;
+    currentYear: number;
 
-        IncomeService.AMOUNT_OF_YEARS = this.years.size;
-        this.currentYear = Math.max(...Array.from(this.years));
+    constructor(private http: HttpClient,
+                private dateService: DateService) {
+        console.log(`${IncomeService.name}: constructor started`);
+        this.requestObservable = this.http.get<any>('http://localhost:3000/income')
+            .pipe(
+                map(data => {
+                    console.log(`${IncomeService.name}: data was loaded`);
+
+                    data.forEach(e => {
+                        e.category = e.category.trim();
+                        const [date, month, year] = e.date.split(".");
+                        e.date = new Date(year, month - 1, date);
+
+                        this.years.add(year);
+                    });
+
+                    IncomeService.AMOUNT_OF_YEARS = this.years.size;
+                    this.currentYear = Math.max(...Array.from(this.years));
+
+                    return data;
+                })
+            );
+
+        this.requestObservable.subscribe(data => this.income = data);
+        console.log(`${IncomeService.name}: constructor finished`);
     }
 
     getPerYear() {
@@ -48,7 +70,7 @@ export class IncomeService {
             .groupBy(e => e.date.getMonth())
             .map((expenses, monthNumber) => {
                 const total = _(expenses).sumBy(e => e.sum);
-                const month = new Date(null, parseInt(monthNumber)).toLocaleString('en', { month: 'long' });
+                const month = new Date(null, parseInt(monthNumber)).toLocaleString('en', {month: 'long'});
                 return {month, total, monthNumber: parseInt(monthNumber)};
             })
             .value();
