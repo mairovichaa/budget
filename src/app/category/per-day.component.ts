@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
 
@@ -17,7 +17,7 @@ import * as _ from "lodash";
     `,
     styles: []
 })
-export class PerDayComponent implements OnChanges {
+export class PerDayComponent implements OnChanges, OnInit {
 
     data: any[] = [];
 
@@ -28,10 +28,20 @@ export class PerDayComponent implements OnChanges {
     constructor(private expenseService: ExpenseService) {
     }
 
+    ngOnInit(): void {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => this.refreshData());
+        this.refreshData();
+        console.log(`ngOnInit finished`);
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
+        this.refreshData();
+    }
+
+    private refreshData() {
         this.data = _(this.expenseService.expenses)
             .filter(e => e.category === this.category && e.date.getFullYear() === this.year && e.date.getMonth() === this.month)
             .value();
     }
-
 }

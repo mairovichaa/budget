@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
 import {DateService} from "../date.service";
@@ -45,7 +45,7 @@ class Month {
         'tr.chosen:hover {background-color: #DDD;}'
     ]
 })
-export class PerMonthComponent implements OnChanges {
+export class PerMonthComponent implements OnChanges, OnInit {
 
     data: Month[] = [];
     chosenMonthName: string;
@@ -57,8 +57,26 @@ export class PerMonthComponent implements OnChanges {
     constructor(private expenseService: ExpenseService, private dateService: DateService) {
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnInit(): void {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => {
+            console.log(`income refreshed event received`);
+            this.refreshData();
+        });
+        this.refreshData();
+        console.log(`ngOnInit finished`);
+    }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(`ngOnChanges started`);
+        this.refreshData();
+        const monthNames = this.dateService.getMonthNames();
+        this.chooseMonth(monthNames[0]);
+
+        console.log(`ngOnChanges finished`);
+    }
+
+    private refreshData() {
         let res = _(this.expenseService.expenses)
             .filter(e => e.category === this.category && e.date.getFullYear() === this.year)
             .groupBy(e => e.date.getMonth())
@@ -82,8 +100,6 @@ export class PerMonthComponent implements OnChanges {
                 this.data.push({name: monthName, total: 0, daily: 0});
             }
         }
-
-        this.chooseMonth(monthNames[0])
     }
 
     chooseMonth(month: string) {

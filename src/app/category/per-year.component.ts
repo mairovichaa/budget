@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ExpenseService} from "../expense.service";
 import * as _ from "lodash";
 
@@ -44,7 +44,7 @@ class Year {
         'tr.chosen:hover {background-color: #DDD;}'
     ]
 })
-export class PerYearComponent implements OnChanges {
+export class PerYearComponent implements OnChanges, OnInit {
 
     data: Year[] = [];
     chosenYear: number;
@@ -55,7 +55,25 @@ export class PerYearComponent implements OnChanges {
     constructor(private expenseService: ExpenseService) {
     }
 
+    ngOnInit() {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => {
+            console.log(`expenses refreshed event received`);
+            this.refreshData();
+        });
+        this.refreshData();
+        if (this.data.length > 0){
+            this.chooseYear(this.data[0]);
+        }
+
+        console.log(`ngOnInit finished`);
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
+        this.refreshData();
+    }
+
+    private refreshData() {
         this.data = _(this.expenseService.expenses)
             .filter(e => e.category === this.category)
             .groupBy(e => e.date.getFullYear())
@@ -65,10 +83,6 @@ export class PerYearComponent implements OnChanges {
                 return {year: parseInt(year), total, monthly};
             })
             .value();
-
-        if (this.data.length > 0){
-            this.chooseYear(this.data[0]);
-        }
     }
 
     chooseYear(entry: any) {

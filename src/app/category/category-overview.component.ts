@@ -1,4 +1,4 @@
-import {Component, QueryList, ViewChildren} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ExpenseService} from '../expense.service';
 import * as _ from "lodash";
 import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
@@ -43,26 +43,34 @@ import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
         'tr.chosen:hover {background-color: #DDD;}'
     ]
 })
-export class CategoryOverviewComponent {
+export class CategoryOverviewComponent implements OnInit {
     data = [];
     total = 0;
     annual = 0;
     chosenCategory: string;
     chosenYear: number;
     chosenMonth: number;
-
     @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
     constructor(private expenseService: ExpenseService) {
-        this.expenseService.requestObservable.subscribe(data => {
-            this.data = expenseService.getOverview();
-            this.total = _(this.data).sumBy(e => e.total);
-            this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
+    }
 
-            if (this.data.length > 0) {
-                this.chosenCategory = this.data[0].category;
-            }
+    ngOnInit(): void {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => {
+            this.refreshData();
         });
+        this.refreshData();
+        if (this.data.length > 0) {
+            this.chosenCategory = this.data[0].category;
+        }
+        console.log(`ngOnInit finished`);
+    }
+
+    private refreshData() {
+        this.data = this.expenseService.getOverview();
+        this.total = _(this.data).sumBy(e => e.total);
+        this.annual = this.total / ExpenseService.AMOUNT_OF_YEARS;
     }
 
     onSort(event: SortEvent) {

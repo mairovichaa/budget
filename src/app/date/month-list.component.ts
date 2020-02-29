@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, Output, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    ViewChildren
+} from '@angular/core';
 import {ExpenseService} from '../expense.service';
 import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
 
@@ -58,7 +68,7 @@ import {SortableHeaderDirective, SortEvent} from "../sortable-header.directive";
         'tr.chosen:hover {background-color: #DDD;}'
     ]
 })
-export class MonthListComponent implements OnChanges {
+export class MonthListComponent implements OnInit, OnChanges {
     dataPerMonth = [];
     dataPerCategory = [];
     month: number = 1;
@@ -70,7 +80,24 @@ export class MonthListComponent implements OnChanges {
     constructor(private expenseService: ExpenseService) {
     }
 
+    ngOnInit(): void {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => {
+            console.log(`income refreshed event received`);
+            this.refreshData();
+        });
+        this.refreshData();
+        console.log(`ngOnInit finished`);
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
+        console.log(`ngOnChanges started`);
+        this.refreshData();
+        console.log(`ngOnChanges finished`);
+    }
+
+    private refreshData() {
+        console.log(`initData for year ${this.year} started`);
         this.dataPerMonth = this.expenseService.getPerMonth(this.year);
         this.dataPerCategory = this.expenseService.getPerCategory(this.year);
     }

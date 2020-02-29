@@ -46,12 +46,19 @@ export class YearListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.incomeService.requestObservable.subscribe(_ => {
-            console.log(`${YearListComponent.name}: expenses loaded event received`);
-            this.data = this.incomeService.getPerYear();
-            const currentYear = this.incomeService.currentYear;
-            this.chooseYear({year: currentYear});
+        console.log(`ngOnInit started`);
+        this.incomeService.incomeRefreshedSubject.subscribe(() => {
+            console.log(`expenses refreshed event received`);
+            this.refreshData();
         });
+        this.refreshData();
+        console.log(`ngOnInit finished`);
+    }
+
+    private refreshData() {
+        this.data = this.incomeService.getPerYear();
+        const currentYear = this.incomeService.currentYear;
+        this.chooseYear({year: currentYear});
     }
 
     chooseYear(yearInfo) {

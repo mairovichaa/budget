@@ -54,9 +54,20 @@ export class MonthOverviewComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        console.log(`ngOnInit started`);
+        this.expenseService.expensesRefreshedSubject.subscribe(() => {
+            console.log(`expenses refreshed event received`);
+            this.refreshData();
+        });
+        this.refreshData();
+        console.log(`ngOnInit finished`);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.refreshData();
+    }
+
+    private refreshData() {
         this.monthName = this.dateService.getMonthName(this.month);
         this.amountOfDays = this.dateService.getAmountOfDays(this.year, this.month);
         this.data = this.expenseService.getOverviewForYearAndMonth(this.year, this.month);
