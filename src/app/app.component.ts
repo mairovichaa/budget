@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {ExpenseService} from "./expense.service";
+import {IncomeService} from "./income.service";
 
 @Component({
     selector: 'app-root',
@@ -21,6 +23,10 @@ import {Component} from '@angular/core';
                     </li>
                 </ul>
             </div>
+            <div>
+                <button (click)="refreshExpenses()">Refresh expenses</button>
+                <button (click)="refreshIncome()">Refresh income</button>
+            </div>
         </nav>
         <div style="margin-top: 10px">
             <router-outlet></router-outlet>
@@ -28,4 +34,14 @@ import {Component} from '@angular/core';
     `
 })
 export class AppComponent {
+
+    constructor(private expenseService: ExpenseService, private incomeService: IncomeService) {
+    }
+
+    refreshExpenses() {
+        this.expenseService.refresh();
+    }
+    refreshIncome() {
+        this.incomeService.refresh();
+    }
 }
