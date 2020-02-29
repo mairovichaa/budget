@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import * as _ from "lodash";
 import {DateService} from "./date.service";
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 interface Expense {
@@ -18,18 +18,23 @@ export class ExpenseService {
     static AMOUNT_OF_YEARS = 2;
 
     years: Set<number> = new Set();
-    requestObservable: Observable<any>;
+    expensesRefreshedSubject: Subject<any> = new Subject<any>();
 
     expenses: Expense[] = [];
     currentYear: number;
 
     constructor(private http: HttpClient,
                 private dateService: DateService) {
-        console.log(`${ExpenseService.name}: constructor started`);
-        this.requestObservable = this.http.get<any>('http://localhost:3000/expenses')
+        console.log(`constructor started`);
+        this.refresh();
+        console.log(`constructor finished`);
+    }
+
+    refresh() {
+        this.http.get<any>('http://localhost:3000/expenses')
             .pipe(
                 map(data => {
-                    console.log(`${ExpenseService.name}: data was loaded`);
+                    console.log(`data was loaded`);
 
                     data.forEach(e => {
                         e.category = e.category.trim();
@@ -41,13 +46,14 @@ export class ExpenseService {
 
                     ExpenseService.AMOUNT_OF_YEARS = this.years.size;
                     this.currentYear = Math.max(...Array.from(this.years));
-
                     return data;
                 })
-            );
-
-        this.requestObservable.subscribe(data => this.expenses = data);
-        console.log(`${ExpenseService.name}: constructor finished`);
+            )
+            .subscribe(data => {
+                this.years.clear();
+                this.expenses = data;
+                this.expensesRefreshedSubject.next();
+            });
     }
 
     getOverview() {

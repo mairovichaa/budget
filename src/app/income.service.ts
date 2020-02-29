@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import * as _ from "lodash";
 import {DateService} from "./date.service";
 import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
 interface Income {
@@ -19,7 +19,7 @@ export class IncomeService {
 
     years: Set<number> = new Set();
 
-    requestObservable: Observable<any>;
+    incomeRefreshedSubject: Subject<any> = new Subject<any>();
 
     income: Income[] = [];
 
@@ -27,11 +27,16 @@ export class IncomeService {
 
     constructor(private http: HttpClient,
                 private dateService: DateService) {
-        console.log(`${IncomeService.name}: constructor started`);
-        this.requestObservable = this.http.get<any>('http://localhost:3000/income')
+        console.log(`constructor started`);
+        this.refresh();
+        console.log(`constructor finished`);
+    }
+
+    refresh() {
+        this.http.get<any>('http://localhost:3000/income')
             .pipe(
                 map(data => {
-                    console.log(`${IncomeService.name}: data was loaded`);
+                    console.log(`data was loaded`);
 
                     data.forEach(e => {
                         e.category = e.category.trim();
@@ -46,10 +51,12 @@ export class IncomeService {
 
                     return data;
                 })
-            );
-
-        this.requestObservable.subscribe(data => this.income = data);
-        console.log(`${IncomeService.name}: constructor finished`);
+            )
+            .subscribe(data => {
+                this.years.clear();
+                this.income = data;
+                this.incomeRefreshedSubject.next();
+            });
     }
 
     getPerYear() {
