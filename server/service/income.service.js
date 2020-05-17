@@ -3,7 +3,7 @@ const path = require('path');
 const {promisify} = require('util');
 
 const config = require('../configuration');
-const TEMP_FILE = `${config.PATH_TO_TEMP_DIR}${path.sep}${config.TEMP_FILE_NAME}`;
+const TEMP_FILE = `${config.PATH_TO_TEMP_DIR}${path.sep}${config.TEMP_INCOME_FILE_NAME}`;
 
 const readIncome = async () => {
     console.log('Start copying of income file');
