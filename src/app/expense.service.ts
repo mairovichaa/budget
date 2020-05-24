@@ -9,6 +9,7 @@ interface Expense {
     category: string;
     date: Date;
     sum: number;
+    comment: string;
 }
 
 @Injectable({
@@ -118,6 +119,15 @@ export class ExpenseService {
                 return {category, total, daily};
             })
             .sortBy(['category'])
+            .value();
+    }
+
+    getForYearAndMonth(year: number, month: number): Expense[] {
+        return _(this.expenses)
+            .filter(e =>
+                e.date.getFullYear() === year && e.date.getMonth() === month
+            )
+            .sortBy(['date'])
             .value();
     }
 }
