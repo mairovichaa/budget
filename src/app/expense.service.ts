@@ -4,6 +4,7 @@ import {DateService} from "./date.service";
 import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {environment} from "../environments/environment";
 
 interface Expense {
     category: string;
@@ -32,7 +33,7 @@ export class ExpenseService {
     }
 
     refresh() {
-        this.http.get<any>('http://localhost:3000/expenses')
+        this.http.get<any>(`${environment.backendHost}/expenses`)
             .pipe(
                 map(data => {
                     console.log(`data was loaded`);

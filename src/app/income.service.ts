@@ -4,6 +4,7 @@ import {DateService} from "./date.service";
 import {map} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../environments/environment";
 
 interface Income {
     category: string;
@@ -33,7 +34,7 @@ export class IncomeService {
     }
 
     refresh() {
-        this.http.get<any>('http://localhost:3000/income')
+        this.http.get<any>(`${environment.backendHost}/income`)
             .pipe(
                 map(data => {
                     console.log(`data was loaded`);
