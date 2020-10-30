@@ -5,30 +5,6 @@ import * as _ from "lodash";
     selector: 'mortgage-overview',
     template: `
         <div style="width: 4000px">
-            <div>
-                <div style="float: left;">
-
-                    <div *ngFor="let e of data" class="card" style="width: 30rem;margin-top: 10px">
-                        <div class="card-body">
-                            <h5 class="card-title">{{e.date | date :'MMM yyyy'}}</h5>
-                            <p class="card-text">Общая сумма платежа: {{e.total | number:'0.2-2'}}</p>
-                            <p class="card-text">Процентная часть платежа: {{e.interest | number:'0.2-2'}}</p>
-                            <p class="card-text">Основная часть платежа: {{e.real | number:'0.2-2'}}</p>
-                            <p *ngIf="e.extraPayments.length > 0">Дополнительные платежи:</p>
-                            <p *ngIf="e.extraPayments.length === 0">Дополнительных платежей нет.</p>
-                            <ul *ngFor="let payment of e.additionalPayments">
-                                <li class="card-text"> {{payment.number | number:'0.2-2'}} - {{payment.description}}
-                                    - {{payment.type === 'one-time' ? 'однократный' : 'многократный'}}</li>
-                            </ul>
-                            <p class="card-text">Остаток: {{e.left | number:'0.2-2'}}</p>
-                            <a class="btn btn-primary" (click)="openModal(e)" data-toggle="modal"
-                               data-target="#exampleModal">Добавить платеж</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
             <div class="modal fade" id="exampleModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
