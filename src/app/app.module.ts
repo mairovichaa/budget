@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -10,6 +11,7 @@ import {MortgageComponent} from "./mortgage/mortgage.component";
 import {CategoryModule} from "./category/category.module";
 import {DateModule} from "./date/date.module";
 import {IncomeModule} from "./income/income.module";
+import {BackupModule} from "./backup/backup.module";
 
 @NgModule({
     declarations: [
@@ -22,10 +24,12 @@ import {IncomeModule} from "./income/income.module";
         AppRoutingModule,
         FormsModule,
         HttpClientModule,
+        NgbModule,
 
         CategoryModule,
         DateModule,
-        IncomeModule
+        IncomeModule,
+        BackupModule
     ],
     providers: [],
     bootstrap: [AppComponent]

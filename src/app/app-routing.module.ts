@@ -4,12 +4,14 @@ import {CategoryOverviewComponent} from "./category/category-overview.component"
 import {DateOverviewComponent} from "./date/date-overview.component";
 import {DateOverviewComponent as IncomeDateOverviewComponent} from "./income/date-overview.component";
 import {MortgageComponent} from "./mortgage/mortgage.component";
+import {BackupsComponent} from "./backup/backups.component";
 
 const routes: Routes = [
   { path: 'category', component: CategoryOverviewComponent },
   { path: 'date', component: DateOverviewComponent},
   { path: 'mortgage', component: MortgageComponent},
   { path: 'income', component: IncomeDateOverviewComponent},
+  { path: 'backups', component: BackupsComponent},
   { path: '',
     redirectTo: '/date',
     pathMatch: 'full'
