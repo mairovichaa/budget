@@ -15,7 +15,7 @@
     "@angular/router": "~10.2.1",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "core-js": "^2.5.4",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "lodash": "^4.17.20",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
